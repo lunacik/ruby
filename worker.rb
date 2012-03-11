@@ -1,6 +1,8 @@
 
 require './person'
 
+module LIBIS
+
 class Worker < Person
   def initialize(name, surname, birthday, pin, address, sin, salary)
     super(name, surname, birthday, pin, address)
@@ -12,3 +14,5 @@ class Worker < Person
   attr_accessor :salary
 
 end
+
+end #module

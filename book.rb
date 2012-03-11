@@ -1,12 +1,17 @@
 
+module LIBIS
+
 class Book
-  def initialize(title, author, isbn, year, pub_house)
+  def initialize(title, author, isbn, year, publisher)
     @title = title
     @author = author
+    @isbn = isbn
     @year = year
-    @pub_house = pub_house
+    @publisher = publisher
   end
 
-  attr :title, :author, :year, :pub_house
+  attr :title, :author, :isbn, :year, :publisher
 
 end
+
+end #module

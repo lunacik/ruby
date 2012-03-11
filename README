@@ -6,16 +6,16 @@ Iš viso bus 4 režimai:
     žiūrovas:
          - gali tik ieškoti knygų
     skaitytojas:
-        turi - vardą, pavardę, gimimo datą, asmens kodą, adresą, e-mail'ą, pin(automatiškai sugeneruotas) 
+        turi - vardą, pavardę, gimimo datą, asmens kodą, adresą, e-mail'ą, id(automatiškai sugeneruotas), knygų sarašą 
         gali - prisijungti prie sistemos, atsijungti nuo sistemos, matyti paimtas knygas, ieškoti knygų, 
             imti knygas, gražinti knygas, pratęsti knygos gražinimo datą
     prižiurėtojas:
-        turi - vardą, pavardę, gimimo datą, asmens kodą, adresą, soc. draudimo numerį, pin(automatiškai sugeneruotas), algą
+        turi - vardą, pavardę, gimimo datą, asmens kodą, adresą, soc. draudimo numerį, id(automatiškai sugeneruotas), algą
         gali - prisijungti prie sistemos, atsijungti nuo sistemos, matyti visus skaitytojus, 
-            panaikinti skaitytojo paskyrą, pridėti skaitytoją, 
+            panaikinti skaitytojo paskyrą, pridėti skaitytoją, pridėti naujas knygas ant lentynos,
             pratęsti skaitytojo knygos gražinimo datą, ieškoti knygų
     administratorius:
-        turi - vardą, pavardę, gimimo datą, asmens kodą, adresą, soc. draudimo numerį, pin(automatiškai sugeneruotas), algą       
+        turi - vardą, pavardę, gimimo datą, asmens kodą, adresą, soc. draudimo numerį, id(automatiškai sugeneruotas), algą       
         gali - prisijungti prie sistemos, atsijungti nuo sistemos, 
             matyti visus darbuotojus, pridėti darbuotoją, atleistį darbuotoją, keisti darbuotojo algą
 

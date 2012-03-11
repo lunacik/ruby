@@ -1,17 +1,18 @@
 
+module LIBIS
 
 class Person
-  def initialize(name, surname, birthday, pin, address)
+  def initialize(name, surname, birthday, id, address)
     @name = name
     @surname = surname
     @birthday = birthday
-    @pin = pin
+    @id = id
     @address = address
   end
 
-  attr_reader :name, :surname, :birthday, :pin
+  attr_reader :name, :surname, :birthday, :id
   attr_accessor :address
 
 end  
   
-
+end #module
