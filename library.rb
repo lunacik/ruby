@@ -51,10 +51,10 @@ class Library
       @ids.push(0)
       0
     else
-      for id in 0..@ids.max + 1 do
+      0.upto(@ids.max + 1) do |id| 
         if not @ids.include?(id)
-          @ids.push(id)
-          return id
+          @ids.push(id) 
+          return id 
         end
       end
     end
