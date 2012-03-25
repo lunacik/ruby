@@ -1,18 +1,16 @@
 
-module LIBIS
+require 'date'
+
 
 class Person
-  def initialize(name, surname, birthday, id, address)
+  attr :name, :surname, :birthday, :id
+  
+  def initialize(name, surname, birthday, id)
     @name = name
     @surname = surname
     @birthday = birthday
     @id = id
-    @address = address
   end
 
-  attr_reader :name, :surname, :birthday, :id
-  attr_accessor :address
+end
 
-end  
-  
-end #module

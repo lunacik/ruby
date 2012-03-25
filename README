@@ -1,21 +1,21 @@
 Agile development with ruby task 1
-imlementing library sistem using TDD
+imlementing library sistem using TDD/BDD
 
 Bibliotekos informacinės sistemos aprašymas
 Iš viso bus 4 režimai:
     žiūrovas:
-         - gali tik ieškoti knygų
+        gali tik ieškoti knygų
     skaitytojas:
-        turi - vardą, pavardę, gimimo datą, asmens kodą, adresą, e-mail'ą, id(automatiškai sugeneruotas), knygų sarašą 
+        turi - vardą, pavardę, gimimo datą, asmens kodą, e-mail'ą, id(automatiškai sugeneruotas), knygų sarašą 
         gali - prisijungti prie sistemos, atsijungti nuo sistemos, matyti paimtas knygas, ieškoti knygų, 
             imti knygas, gražinti knygas, pratęsti knygos gražinimo datą
     prižiurėtojas:
-        turi - vardą, pavardę, gimimo datą, asmens kodą, adresą, soc. draudimo numerį, id(automatiškai sugeneruotas), algą
+        turi - vardą, pavardę, gimimo datą, asmens kodą, soc. draudimo numerį, id(automatiškai sugeneruotas), algą
         gali - prisijungti prie sistemos, atsijungti nuo sistemos, matyti visus skaitytojus, 
             panaikinti skaitytojo paskyrą, pridėti skaitytoją, pridėti naujas knygas ant lentynos,
-            pratęsti skaitytojo knygos gražinimo datą, ieškoti knygų
+            pratęsti skaitytojo knygos gražinimo datą, ieškoti knygų, pridėti arba pašalinti knygą
     administratorius:
-        turi - vardą, pavardę, gimimo datą, asmens kodą, adresą, soc. draudimo numerį, id(automatiškai sugeneruotas), algą       
+        turi - vardą, pavardę, gimimo datą, asmens kodą, soc. draudimo numerį, id(automatiškai sugeneruotas), algą       
         gali - prisijungti prie sistemos, atsijungti nuo sistemos, 
             matyti visus darbuotojus, pridėti darbuotoją, atleistį darbuotoją, keisti darbuotojo algą
 
@@ -26,4 +26,4 @@ Iš viso bus 4 režimai:
     imti knygą
     gražinti knygą
     pratęsti knygos gražinimo laiką
-    regitruoti naują skaitytoją
+    registruoti naują skaitytoją
