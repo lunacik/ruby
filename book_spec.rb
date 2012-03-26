@@ -11,6 +11,30 @@ describe Book do
     it "should take four parameters and return new Book object" do
       @book.should be_instance_of Book
     end
+
+    it "should not allow to create book with year greater than current" do
+      lambda {
+          Book.new "Mike", "Pukuotukas", Date.today.year + 1, "knygynas"
+      }.should raise_error "Cant create book with year greater than current"
+    end
+
+    it "should not allow to create book with empty title" do
+      lambda {
+          Book.new "", "Pukuotukas", 1900, "knygynas"
+      }.should raise_error "Cant create book without title"
+    end 
+
+    it "should not allow to create book with empty author" do
+      lambda {
+          Book.new "Mike", "", 1900, "knygynas"
+      }.should raise_error "Cant create book without author"
+    end  
+
+    it "should not allow to create book with empty publisher" do
+      lambda {
+          Book.new "Mike", "Pukuotukas", 1900, ""
+      }.should raise_error "Cant create book without publisher"
+    end   
   end
 
   describe "#title" do
