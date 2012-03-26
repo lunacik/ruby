@@ -1,0 +1,26 @@
+---
+- !ruby/object:Book
+  title: Baltoji iltis
+  author: Jack London
+  year: 1906
+  publisher: Mano knyga
+- !ruby/object:Book
+  title: Heroinas
+  author: Melvin Burgess
+  year: 1995
+  publisher: Baltos lankos
+- !ruby/object:Book
+  title: Alchemikas
+  author: Paulo Coehlo
+  year: 1995
+  publisher: Mano knyga
+- !ruby/object:Book
+  title: Kelias Atgal
+  author: Erich Maria Remarque
+  year: 1930
+  publisher: VVL
+- !ruby/object:Book
+  title: Kelias Namo
+  author: Ghost Writer
+  year: '2012'
+  publisher: VKL
