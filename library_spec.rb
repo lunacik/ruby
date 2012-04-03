@@ -4,13 +4,13 @@ require './library'
 
 describe Library do
   before :all do
-    books = [
-        Book.new("Baltoji iltis", "Jack London", 1906, "Mano knyga"),
-        Book.new("Heroinas", "Melvin Burgess", 1995, "Baltos lankos"),
-        Book.new("Alchemikas", "Paulo Coehlo", 1995, "Mano knyga"),
-        Book.new("Kelias Atgal", "Erich Maria Remarque", 1930, "VVL"),
-        Book.new("Kelias Namo", "Ghost Writer", "2012", "VKL")
-    ]
+    books = {
+        0 => Book.new("Baltoji iltis", "Jack London", 1906, "Mano knyga"),
+        1 => Book.new("Heroinas", "Melvin Burgess", 1995, "Baltos lankos"),
+        2 => Book.new("Alchemikas", "Paulo Coehlo", 1995, "Mano knyga"),
+        3 => Book.new("Kelias Atgal", "Erich Maria Remarque", 1930, "VVL"),
+        4 => Book.new("Kelias Namo", "Ghost Writer", 2012, "VKL")
+    }
 
     File.open "books.yml", "w" do |f|
       f.write YAML::dump books
@@ -54,7 +54,7 @@ describe Library do
 
   it "should accept new books" do
     @library.add_book(Book.new("Didysis karas", "Antanas Vienuolis", 1940, "Mano knyga"))
-    @library.get_books(:title, "Didysis karas").pop.should be_instance_of Book
+    @library.get_books(:title, "Didysis karas").last.should == 5
   end
 
   it "should add new books correctly" do

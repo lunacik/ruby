@@ -2,40 +2,37 @@
 #require 'psych'
 require 'yaml'
 require './book'
+require './tools'
+
+
+class Fixnum
+  def upcase
+    self
+  end
+  alias include? ==
+end
 
 
 class Library
   attr :books
+  include IDGenerator
 
   def initialize(books_file = false)
     @books_file = books_file
-    @books = @books_file ? YAML::load_file(@books_file) : []
+    @books = @books_file ? YAML::load_file(@books_file) : {}
+    @book_ids = @books.keys
   end
 
   def get_books(category, pattern)
     books = []
-    case category
-      when :title then @books.each do |book| 
-        books.push(book) if book.title.upcase.include?(pattern.upcase)
-      end
-      
-      when :author then @books.each do |book|
-        books.push(book) if book.author.upcase.include?(pattern.upcase)
-      end
-
-      when :year then @books.each do |book|
-        books.push(book) if book.year == pattern
-      end
- 
-      when :publisher then @books.each do |book|
-        books.push(book) if book.publisher.upcase.include?(pattern.upcase)
-      end
+    @books.each do |id, book| 
+      books.push(id) if eval("book." + category.to_s).upcase.include?(pattern.upcase)
     end
     books
   end
 
   def add_book(new_book)
-    @books.push(new_book) 
+    @books[new_id(@book_ids)] = new_book
   end
 
   def save(books_file = false)
