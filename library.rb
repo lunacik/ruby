@@ -1,26 +1,25 @@
 
-#require 'psych'
 require 'yaml'
 require './book'
+require './user'
+require './supervisor'
 require './tools'
 
 
-class Fixnum
-  def upcase
-    self
-  end
-  alias include? ==
-end
 
 
 class Library
-  attr :books
+  attr :books, :users, :supervisors
   include IDGenerator
 
-  def initialize(books_file = false)
-    @books_file = books_file
+  def initialize(files={})
+    @books_file = files[:books]
+    @accounts_file = files[:acc]
     @books = @books_file ? YAML::load_file(@books_file) : {}
     @book_ids = @books.keys
+    @users = @accounts_file ? YAML::load_file(@accounts_file)[:users] : {}
+    @supervisors = @accounts_file ? YAML::load_file(@accounts_file)[:supervisors] : {}
+    @acc_ids = @users.keys + @supervisors.keys
   end
 
   def get_books(category, pattern)
@@ -35,10 +34,21 @@ class Library
     @books[new_id(@book_ids)] = new_book
   end
 
-  def save(books_file = false)
+  def add_acc(type, acc)
+    eval(type.to_s)[new_id(@acc_ids)] = acc 
+  end 
+
+  def save_books(books_file = false)
     @books_file = books_file || @books_file || "books.yml"
     File.open(@books_file, "w") do |f|
       f.write(YAML::dump @books)
+    end
+  end
+
+  def save_accounts(acc_file = false)
+    @accounts_file = acc_file || @accounts_file || "accounts.yml"
+    File.open(@accounts_file, "w") do |f|
+        f.write YAML::dump ({:users => @users, :supervisors => @supervisors})
     end
   end
 end

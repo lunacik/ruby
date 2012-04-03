@@ -1,0 +1,21 @@
+---
+:users:
+  0: !ruby/object:User
+    name: Valerij
+    surname: Bielskij
+    birthday: 1990-04-29
+    email: lunacik@epastas.lt
+    books_taken: []
+  1: !ruby/object:User
+    name: Eduard
+    surname: Bielskij
+    birthday: 1992-03-20
+    email: edka@one.lt
+    books_taken: []
+:supervisors:
+  2: !ruby/object:Supervisor
+    name: Paulius
+    surname: Dovidauskas
+    birthday: 1980-03-20
+    sin: 2353434
+    salary: 2000

@@ -31,5 +31,16 @@ module IDGenerator
       end
     end
   end
-
 end
+
+
+
+class Fixnum
+  def upcase
+    self
+  end
+  alias include? ==
+end
+
+
+

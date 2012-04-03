@@ -12,14 +12,26 @@ describe Library do
         4 => Book.new("Kelias Namo", "Ghost Writer", 2012, "VKL")
     }
 
+    users = {
+        0 => User.new("Valerij", "Bielskij", Date.new(1990, 4, 29), "lunacik@epastas.lt"),
+        1 => User.new("Eduard", "Bielskij", Date.new(1992, 3, 20), "edka@one.lt")
+    }
+
+    supervisors = {
+        2 => Supervisor.new("Paulius", "Dovidauskas", Date.new(1980, 03, 20), 2353434)
+    }
 
     File.open "books.yml", "w" do |f|
       f.write YAML::dump books
     end
+
+    File.open "accounts.yml", "w" do |f|
+      f.write YAML::dump ({:users => users, :supervisors => supervisors})
+    end
   end
 
   before :each do
-    @library = Library.new "books.yml"
+    @library = Library.new ({:books => "books.yml", :acc => "accounts.yml"})
   end
 
   describe "#new" do
@@ -28,11 +40,20 @@ describe Library do
         library = Library.new
         library.should have(0).books
       end
+
+      specify "should have no accounts" do
+        library = Library.new
+        library.should have(0).users
+      end
     end
 
     context "with yaml file parameter" do
       specify "should have 5 books" do
         @library.should have(5).books
+      end
+
+      specify "should have 1 supervisor" do
+        @library.should have(1).supervisors
       end
     end
   end
@@ -63,10 +84,21 @@ describe Library do
     @library.should have(6).books
   end
 
-  it "should save data correctly" do
-    @library.save
-    new_library = Library.new "books.yml"
+  it "should accept new accounts" do
+    @library.add_acc(:users, User.new("Tatjana", "Bielskaja", Date.new(1968, 12, 29), "mama@pastas.lt"))
+    @library.should have(3).users
+  end
+
+  it "should save books correctly" do
+    @library.save_books
+    new_library = Library.new :books => "books.yml"
     new_library.books.should == @library.books 
+  end
+
+  it "should save accounts correctly" do
+    @library.save_accounts
+    new_library = Library.new :acc => "accounts.yml"
+    new_library.users.should == @library.users
   end
 end
 
