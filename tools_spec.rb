@@ -1,16 +1,6 @@
 
 require './tools'
 
-=begin
-describe AgeRange, "#check_age" do
-  it "should rise error " do
-    lambda {
-      check_age(Datenew(1990, 4, 29), 30)
-    }.should raise_error "Cannot create user younger than 30" 
-  end
-end
-=end
-
 
 describe "IDGenerator", "#new_id" do
   include IDGenerator

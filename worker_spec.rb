@@ -4,8 +4,20 @@ require './worker.rb'
 
 describe Worker do
   before :all do
-    @worker = Worker.new "Paulius", "Dovidauskas", 0, Date.new(1980, 03, 20), 324342, 2000 
+    @worker = Worker.new "Paulius", "Dovidauskas", Date.new(1980, 03, 20), 324342, 2000 
   end
+  describe "#new" do
+    it "should take 5 parameters and return 'Worker' object" do
+      @worker.should be_instance_of Worker
+    end
+
+    it "should not allow to create worker younger than #{MIN_WORKER_AGE}" do
+      lambda {
+        Worker.new "Paulius", "Dovidauskas", Date.new(1995, 03, 20), 2312, 2000
+      }.should raise_error "Cannot create user younger than #{MIN_WORKER_AGE}"
+    end
+  end
+
   it "should inherit from 'Person'" do
     Worker.should < Person
   end

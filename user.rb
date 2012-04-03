@@ -9,9 +9,9 @@ class User < Person
 
   include AgeRange
 
-  def initialize(name, surname, id, birthday, email)
+  def initialize(*args, birthday, email)
     check_age(birthday, MIN_USER_AGE)
-    super(name, surname, id, birthday)
+    super(*args, birthday)
     @email = email
     @books_taken = []
   end
