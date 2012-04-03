@@ -12,6 +12,7 @@ describe Library do
         4 => Book.new("Kelias Namo", "Ghost Writer", 2012, "VKL")
     }
 
+
     File.open "books.yml", "w" do |f|
       f.write YAML::dump books
     end
