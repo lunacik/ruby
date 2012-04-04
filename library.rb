@@ -24,6 +24,7 @@ class Library
 
   def get_books(category, pattern)
     books = []
+    pattern = pattern.to_i if category == :year
     @books.each do |id, book| 
       books.push(id) if eval("book." + category.to_s).upcase.include?(pattern.upcase)
     end
@@ -50,6 +51,13 @@ class Library
     File.open(@accounts_file, "w") do |f|
         f.write YAML::dump ({:users => @users, :supervisors => @supervisors})
     end
+  end
+
+  def connect(who, id, password)
+    account = eval("@" + who.to_s)[id]
+    raise "Wrong username or password, please try again" if account == nil
+    raise "Wrong username or password, please try again" if account.surname != password
+    account
   end
 end
 

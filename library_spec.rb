@@ -95,6 +95,21 @@ describe Library do
     new_library.books.should == @library.books 
   end
 
+  it "should allow to connect to information system" do
+    @library.connect(:users, 0, "Bielskij").should == @library.users[0]
+  end
+
+  it "should not allow to connect unregistered users" do
+    lambda {
+        @library.connect(:users, 5, "Kazkoks")
+    }.should raise_error "Wrong username or password, please try again"
+  end
+
+  it "should not allow to connect users into supervisors mode" do
+    lambda {
+        @library.connect(:supervisors, 0, "Bielskij")
+    }.should raise_error "Wrong username or password, please try again"
+  end
 end
 
 
