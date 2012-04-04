@@ -95,11 +95,6 @@ describe Library do
     new_library.books.should == @library.books 
   end
 
-  it "should save accounts correctly" do
-    @library.save_accounts
-    new_library = Library.new :acc => "accounts.yml"
-    new_library.users.should == @library.users
-  end
 end
 
 
