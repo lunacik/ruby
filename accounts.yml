@@ -5,7 +5,8 @@
     surname: Bielskij
     birthday: 1990-04-29
     email: lunacik@epastas.lt
-    books_taken: {}
+    books_taken:
+      0: 2012-04-11
   1: !ruby/object:User
     name: Eduard
     surname: Bielskij
@@ -18,4 +19,11 @@
     surname: Dovidauskas
     birthday: 1980-03-20
     sin: 2353434
-    salary: 2000
+    salary: 5000
+:administrators:
+  3: !ruby/object:Administrator
+    name: Andrius
+    surname: Kasperas
+    birthday: 1960-01-01
+    sin: 232422
+    salary: 3000

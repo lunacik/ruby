@@ -6,6 +6,20 @@ describe User do
   before :all do
     @user = User.new "Valerij", "Bielskij", 
         Date.new(1990, 4, 29), "lunacik18@gmail.com"
+    
+    @book_id = 0
+    @user_id = 0
+ 
+    @user.books_taken[@book_id] = Date.today
+
+    @books_examples = {
+      0 => {:count => 3, :who => {}},
+      1 => {:count => 1, :who => {}},
+      2 => {:count => 1, :who => {}},
+      3 => {:count => 1, :who => {}},
+      4 => {:count => 1, :who => {}},
+      5 => {:count => 1, :who => {}}
+    }
   end
 
   it "should inherit from person" do
@@ -30,41 +44,19 @@ describe User do
     end
   end
 
-  it "should be able to take books from library" do
-    @user.take_book(0)
-    @user.should have(1).books_taken    
+  it "should be able to return books back" do
+    @user.return(@books_examples, @book_id,  @user_id)
+    @books_examples[@book_id][:who][@user_id].should be_nil
   end
 
-  it "should not allow to have more than 5 books" do
-    @user.take_book(1)
-    @user.take_book(2)
-    @user.take_book(3)
-    @user.take_book(4)
+  it "should not allow to return nonexistend books" do
     lambda {
-        @user.take_book(5)
-    }.should raise_error "Cannot take books more than #{MAX_BOOKS_ALLOWED}"
-  end
-
-  it "should be able to return books" do
-    @user.return_book(4)
-    @user.should have(4).books_taken
-  end
-
-  it "should not allow to return book which he doesnt poses" do
-    lambda {
-      @user.return_book(4)
+        @user.return(@books_examples, 6,  @user_id)
     }.should raise_error "Cannot return nonexistent book"
   end
 
-  it "should be able to extend books period" do
-    @user.extend_book(1)
-    @user.books_taken[1].should == Date.today
-  end
-
-  it "should not allow to extend book which he doesnt poses" do
-    lambda {
-        @user.extend_book(4)
-    }.should raise_error "Cannot extend nonexistent book"
+  it "should take books back correctly" do
+    @user.books_taken[@book_id].should be_nil
   end
 
 end
