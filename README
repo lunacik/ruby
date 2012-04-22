@@ -4,18 +4,18 @@ imlementing library sistem using TDD/BDD
 Bibliotekos informacinės sistemos aprašymas
 Iš viso bus 4 režimai:
     žiūrovas:
-        gali tik ieškoti knygų
+        gali matyti visas knygas, ieškoti knygų
     skaitytojas:
-        turi - vardą, pavardę, gimimo datą, asmens kodą, e-mail'ą, id(automatiškai sugeneruotas), knygų sarašą 
+        turi - vardą, pavardę, gimimo datą, e-mail'ą, id(automatiškai sugeneruotas), knygų sarašą 
         gali - prisijungti prie sistemos, atsijungti nuo sistemos, matyti paimtas knygas, ieškoti knygų, 
             imti knygas, gražinti knygas, pratęsti knygos gražinimo datą
     prižiurėtojas:
-        turi - vardą, pavardę, gimimo datą, asmens kodą, soc. draudimo numerį, id(automatiškai sugeneruotas), algą
+        turi - vardą, pavardę, gimimo datą, soc. draudimo numerį, id(automatiškai sugeneruotas), algą
         gali - prisijungti prie sistemos, atsijungti nuo sistemos, matyti visus skaitytojus, 
-            panaikinti skaitytojo paskyrą, pridėti skaitytoją, pridėti naujas knygas ant lentynos,
+            panaikinti skaitytojo paskyrą, pridėti skaitytoją, pridėti naujas knygas, išduoti knygą
             pratęsti skaitytojo knygos gražinimo datą, ieškoti knygų
     administratorius:
-        turi - vardą, pavardę, gimimo datą, asmens kodą, soc. draudimo numerį, id(automatiškai sugeneruotas), algą       
+        turi - vardą, pavardę, gimimo datą, soc. draudimo numerį, id(automatiškai sugeneruotas), algą       
         gali - prisijungti prie sistemos, atsijungti nuo sistemos, 
             matyti visus darbuotojus, pridėti darbuotoją, atleistį darbuotoją, keisti darbuotojo algą
 

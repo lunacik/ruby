@@ -1,6 +1,7 @@
 
 require './worker'
 require './user'
+require './book'
 
 
 class Supervisor < Worker
@@ -8,22 +9,23 @@ class Supervisor < Worker
     super(name, surname, birthday, sin, salary)
   end
 
-  def lend(books_examples, users, book_id, user, user_id)
-    raise "Cannot lend book for unregistered user" unless users[user_id]
-    if user.books_taken.length == 5
+  @collection = []
+
+  def lend(user, book)
+    raise "Cannot lend book for unregistered user" unless User.all.include?(user)
+    if user.books_taken.length >= MAX_BOOKS_ALLOWED
       raise "Cannot take books more than #{MAX_BOOKS_ALLOWED}" 
     end
-    raise "You already possess that book" if user.books_taken[book_id]
-    raise "Cannot lend nonexistent book" unless books_examples[book_id]
-    user.books_taken[book_id] = Date.today
-    books_examples[book_id][:who][user_id] = Date.today
-    books_examples[book_id][:count] -= 1
+    raise "You already possess that book" if user.books_taken[book]
+    raise "Cannot lend nonexistent book" unless Book.all.include?(book)
+    user.books_taken[book] = Date.today
+    book.examples.records[user] = Date.today
   end
 
-  def extend(books_examples, book_id, user, user_id)
-    raise "Cannot extend nonexistent book" unless user.books_taken[book_id]
-    user.books_taken[book_id] = Date.today
-    books_examples[book_id][:who][user_id] = Date.today
+  def extend(user, book)
+    raise "Cannot extend nonexistent book" unless user.books_taken[book]
+    user.books_taken[book] = Date.today
+    book.examples.records[user] = Date.today
   end
 
 end

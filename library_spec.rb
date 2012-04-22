@@ -1,136 +1,102 @@
 
 require './library'
+require './spec_helper'
 
 
 describe Library do
   before :all do
-    books = {
-        0 => Book.new("Baltoji iltis", "Jack London", 1906, "Mano knyga"),
-        1 => Book.new("Heroinas", "Melvin Burgess", 1995, "Baltos lankos"),
-        2 => Book.new("Alchemikas", "Paulo Coehlo", 1995, "Mano knyga"),
-        3 => Book.new("Kelias Atgal", "Erich Maria Remarque", 1930, "VVL"),
-        4 => Book.new("Kelias Namo", "Ghost Writer", 2012, "VKL")
-    }
+    @bt = "books_test.yml"
+    @at = "acc_test.yml"
 
-    users = {
-        0 => User.new("Valerij", "Bielskij", Date.new(1990, 4, 29), "lunacik@epastas.lt"),
-        1 => User.new("Eduard", "Bielskij", Date.new(1992, 3, 20), "edka@one.lt")
-    }
+    Book.new("Baltoji iltis", "Jack London", 1906, "Mano knyga", 4).add!
+    Book.new("Heroinas", "Melvin Burgess", 1995, "Baltos lankos", 2).add!
+    Book.new("Alchemikas", "Paulo Coehlo", 1995, "Mano knyga", 1).add!
+    Book.new("Kelias Atgal", "Erich Maria Remarque", 1930, "VVL", 5).add!
+    Book.new("Kelias Namo", "Ghost Writer", 2012, "VKL", 3).add!
 
-    supervisors = {
-        2 => Supervisor.new("Paulius", "Dovidauskas", Date.new(1980, 03, 20), 2353434)
-    }
+    User.new("Valerij", "Bielskij", Date.new(1990, 4, 29), "lunacik@epastas.lt").add!
+    User.new("Eduard", "Bielskij", Date.new(1992, 3, 20), "edka@one.lt").add!
+        
+    Supervisor.new("Paulius", "Dovidauskas", Date.new(1980, 03, 20), 2353434).add!
 
-    administrators = {
-        3 => Administrator.new("Andrius", "Kasperas", Date.new(1960, 01, 01), 232422)
-    }
+    Administrator.new("Andrius", "Kasperas", Date.new(1960, 01, 01), 232422).add!
 
-    @books_examples = {
-        0 => {:count => 3, :who => {}},
-        1 =>{:count => 1, :who => {}},
-        2 =>{:count => 1, :who => {}},
-        3 =>{:count => 1, :who => {}},
-        4 =>{:count => 1, :who => {}},
-        5 =>{:count => 1, :who => {}}
-    } 
-
-    File.open "books.yml", "w" do |f|
-      f.write YAML::dump ({:books => books, :examples => @books_examples})
+    File.open @bt, "w" do |f|
+      f.write YAML::dump Book.all
     end
 
-    File.open "accounts.yml", "w" do |f|
+    File.open @at, "w" do |f|
       f.write YAML::dump ({
-        :users => users, :supervisors => supervisors,
-        :administrators => administrators
+        :users => User.all, :supervisors => Supervisor.all,
+        :administrators => Administrator.all
       })
     end
+
+    Book.clear
+    User.clear
+    Supervisor.clear
+    Administrator.clear
   end
 
-  before :each do
-    @library = Library.new ({:books => "books.yml", :acc => "accounts.yml"})
+  before :all do
+    @library = Library.new({:books => @bt, :accounts => @at})
   end
 
   describe "#new" do
-    context "with no parameters" do
-      specify "should have no books" do
-        library = Library.new
-        library.should have(0).books
-      end
-
-      specify "should have no accounts" do
-        library = Library.new
-        library.should have(0).users
-      end
-    end
+    #context "with no parameters" do
+    #  specify "should have no books" do
+    #    Library.new
+    #    Book.all.should be_empty
+    #  end
+    #
+    #  specify "should have no accounts" do
+    #    User.all.should be_empty
+    #  end
+    #end
 
     context "with yaml file parameter" do
-      specify "should have 5 books" do
-        @library.should have(5).books
+      it "should have 5 books" do
+        Book.count.should == 5
       end
 
-      specify "should have 1 supervisor" do
-        @library.should have(1).supervisors
+      it "should have 1 supervisor" do
+        Supervisor.count.should == 1
       end
     end
-  end
-  
-  it "should return 2 books for search 'kelias' in title category" do
-    @library.get_books(:title, "kelias").length.should == 2
-  end
-
-  it "should return 1 book for search 'Paul' in author category" do
-    @library.get_books(:author, "Paul").length.should == 1
-  end                  
-
-  it "should return 2 books for search '1995' in year category" do
-    @library.get_books(:year, 1995).length.should == 2
-  end
-
-  it "should return empty list for nonexistent publisher category" do
-    @library.get_books(:publisher, "Vilniaus knygynas").should == []
-  end
-
-  it "should accept new books" do
-    @library.add_book(Book.new("Didysis karas", "Antanas Vienuolis", 1940, "Mano knyga"), 3)
-    @library.get_books(:title, "Didysis karas").last.should == 5
-  end
-
-  it "should add new books correctly" do
-    @library.add_book(Book.new("Didysis karas", "Antanas Vienuolis", 1940, "Mano knyga"), 2)
-    @library.should have(6).books
-  end
-
-  it "should accept new accounts" do
-    @library.add_acc(:users, User.new("Tatjana", "Bielskaja", Date.new(1968, 12, 29), "mama@pastas.lt"))
-    @library.should have(3).users
-  end
-
-  it "should be able to remove accounts" do
-    @library.remove_acc(:supervisors, 2)
-    @library.should have(0).supervisors
   end
 
   it "should save books correctly" do
     @library.save_books
-    new_library = Library.new :books => "books.yml"
-    new_library.books.should == @library.books 
+    books = Book.all
+    Book.clear
+    Library.new :books => "books.yml"
+    books.should == Book.all 
   end
 
-  it "should allow to connect to information system" do
-    @library.connect(:users, 0, "Bielskij").should == 0
+  it "should allow to connect to information system for users" do
+    @library.connect(0, "Bielskij").should == User.all.first
+  end
+
+  it "should allow to connect to information system for supervisors" do
+    @library.connect(2, "Dovidauskas").should be_instance_of Supervisor
+  end
+
+  it "should allow to connect to information system for admnis" do
+    @library.connect(3, "Kasperas").should be_instance_of Administrator
   end
 
   it "should not allow to connect for unregistered users" do
     lambda {
-        @library.connect(:users, 6, "Kazkoks")
+        @library.connect(6, "Kazkoks")
     }.should raise_error "Wrong username or password, please try again"
   end
 
-  it "should not allow to connect simple users into supervisors mode" do
+  it "should not allow to connect if wrong password specified" do
     lambda {
-        @library.connect(:supervisors, 0, "Bielskij")
+        @library.connect(0, "biel")
     }.should raise_error "Wrong username or password, please try again"
   end
+
 end
 
 

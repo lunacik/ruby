@@ -8,8 +8,10 @@ class Worker < Person
   attr_accessor :salary
   include AgeRange
 
+  @collection = []
+
   def initialize(*args, birthday, sin, salary)
-    check_age(birthday, 18)
+    check_age(birthday, MIN_WORKER_AGE)
     super(*args, birthday)
     @sin = sin
     @salary = salary

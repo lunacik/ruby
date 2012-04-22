@@ -1,40 +1,40 @@
 
 require './tools'
+require './collection'
+require './spec_helper.rb'
+
+
+class Temp < Collection
+  include IDGenerator
+  @collection = []
+
+  attr :id
+
+  def initialize
+    @id = new_id
+  end
+end
+
 
 
 describe "IDGenerator", "#new_id" do
   include IDGenerator
 
-  before :all do
-    @ids = []
+  it "id should be 0 for first item" do
+    Temp.new.should have_id_equal 0 
   end
 
-  it "should return 0 for empty list of id's" do
-   new_id(@ids).should == 0
+  it "id should be 1 for next item" do
+    Temp.new.should have_id_equal 1
   end
 
-  it "should return 1 for next id" do
-    new_id(@ids).should == 1
+  it "id should be 0 if delete first item" do
+    Temp.delete(Temp.find_first_by_id(0))
+    Temp.new.should have_id_equal 0
   end
 
-  it "should return 0 if we remove 0 and add new id" do
-    @ids.delete(0)
-    new_id(@ids).should == 0
-  end
-
-  it "should return 2 if add new id" do
-    new_id(@ids).should == 2
-  end
-
-  it "should return 3 if we add 2 ids and remove 3'rd" do
-    new_id(@ids)
-    new_id(@ids)
-    @ids.delete(3)
-    new_id(@ids).should == 3
-  end
-
-  it "should return 5 for next id" do
-    new_id(@ids).should == 5
+  it "id should be 2 for next item" do
+    Temp.new.should have_id_equal 2
   end
 
 end

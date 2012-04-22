@@ -5,23 +5,14 @@ require './user'
 describe User do
   before :all do
     @user = User.new "Valerij", "Bielskij", 
-        Date.new(1990, 4, 29), "lunacik18@gmail.com"
+      Date.new(1990, 4, 29), "lunacik18@gmail.com"
     
-    @book_id = 0
-    @user_id = 0
- 
-    @user.books_taken[@book_id] = Date.today
-
-    @books_examples = {
-      0 => {:count => 3, :who => {}},
-      1 => {:count => 1, :who => {}},
-      2 => {:count => 1, :who => {}},
-      3 => {:count => 1, :who => {}},
-      4 => {:count => 1, :who => {}},
-      5 => {:count => 1, :who => {}}
-    }
+    @book = Book.new "Knyga", "kazkas", 2000, "NzN", 5
+    @user.books_taken[@book] = Date.today
+    @book.examples.records[@user] = Date.today
   end
 
+=begin
   it "should inherit from person" do
     User.should < Person
   end
@@ -44,19 +35,24 @@ describe User do
     end
   end
 
+  it "books examples records should be correct" do
+    @book.examples.should have(1).records
+  end
+
   it "should be able to return books back" do
-    @user.return(@books_examples, @book_id,  @user_id)
-    @books_examples[@book_id][:who][@user_id].should be_nil
+    @user.return(@book)
+    @user.should have(0).books_taken
   end
 
   it "should not allow to return nonexistend books" do
     lambda {
-        @user.return(@books_examples, 6,  @user_id)
+        @user.return(Book.new("wd", "dwa", 1900, "awd", 3))
     }.should raise_error "Cannot return nonexistent book"
   end
 
-  it "should take books back correctly" do
-    @user.books_taken[@book_id].should be_nil
+  it "should return books correctly" do
+    @book.examples.should have(0).records
   end
-
+=end
 end
+

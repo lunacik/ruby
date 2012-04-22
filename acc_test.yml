@@ -14,20 +14,13 @@
   id: 1
   email: edka@one.lt
   books_taken: {}
-- !ruby/object:User
-  name: Mirek
-  surname: Burok
-  birthday: 1991-02-01
-  id: 5
-  email: kot@tok.lt
-  books_taken: {}
 :supervisors:
 - !ruby/object:Supervisor
-  name: Julius
-  surname: Ramonas
-  birthday: 1989-03-21
-  id: 4
-  sin: 3234234
+  name: Paulius
+  surname: Dovidauskas
+  birthday: 1980-03-20
+  id: 2
+  sin: 2353434
   salary: 2000
 :administrators:
 - !ruby/object:Administrator

@@ -7,146 +7,124 @@ require './library'
 
 
 
-class UI
+class Controller
   def initialize
-    @library = Library.new ({:books => "books.yml", :acc => "accounts.yml"})
+    @library = Library.new({:books => "books.yml", :accounts => "accounts.yml"})
     loopMenu
   end
 
-  def loopMenu
+  def print_clear(message)
     print `clear`
-    puts "Welcome to the Library!"
-    printMenu
+    puts message
+  end
+
+  def loopMenu
     while true
       begin
+        print_clear "Welcome to the Library!"
+        printMenu
         case gets.chomp
           when "1" then
             start_SPS
           when "2" then
-            start_US(login(:users))
+            puts "Enter your username"
+            id = gets.to_i
+            puts "Enter your password"
+            pwd = gets.chomp
+            account = @library.connect(id, pwd)
+            if account.instance_of?(User)
+              start_US(account)
+            elsif account.instance_of?(Supervisor)
+              start_SS(account)
+            else
+              start_AS(account)
+            end 
           when "3" then
-            start_SS(login(:supervisors))
-          when "4" then
-            start_AS(login(:administrators))
-          when "5" then
-            @library.save_accounts
-            @library.save_books
-          when "6" then
             puts "Good bye..."
             break
           else
-            puts "Invalid input! Choose between 1 and 5. Press enter to continue..."
-            gets
+            invalid_input(3)
         end
       rescue Exception => e
         puts e
-        puts "Press enter to continue..."
-        gets
+        idle
       end
-      print `clear`
-      printMenu
     end
   end
 
   def printMenu
     puts "1 - to enter spectator mode"
-    puts "2 - to enter reader mode"
-    puts "3 - to enter supervisor mode"
-    puts "4 - to enter administrator mode"
-    puts "5 - to save changes"
-    puts "6 - to quit"
+    puts "2 - to login"
+    puts "3 - to quit"
   end
 
-  def login(who)
-    puts "Enter your username"
-    id = gets.to_i
-    puts "Enter your password"
-    pwd = gets.chomp
-    @library.connect(who, id, pwd)
-  end
 
   def start_SPS
-    print `clear`
-    msg = "1 - to see all books in library\n2 - to search book\n3 - to disconnect\n"
-    print msg
     while true
+      print_clear "1 - to see all books in library\n2 - to search book\n3 - to disconect"
       case gets.chomp
         when "1" then
-          printBooks
-          puts "Press enter to continue..."
-          gets
+          print_books
+          idle
         when "2" then
-          seach_book
+          search_book
         when "3" then
           break
         else
-          print "Invalid input! Choose between 1 and 3. Press enter to continue..."
-          gets
+          invalid_input(3)
       end
-      print `clear`
-      print msg
     end      
   end
 
-  def start_US(user_id)
-    user = @library.users[user_id]
-    print `clear`
-    msg = "1 - to see all books in library\n2 - to search book\n3 - to extend book\n4 - to return book\n5 - to see taken books\n6 - to diconnect\n"
-    print msg
+  def start_US(user)
     while true
+      print_clear "1 - to see all books in library\n2 - to search book\n3 - to extend book"
+      puts "4 - to return book\n5 - to see taken books\n6 - to disconnect"
       case gets.chomp
-      when "1" then
-        printBooks
-        puts "Press enter to continue..."
-        gets
-      when "2" then
-        search_book
-      when "3" then
-        puts "Enter book id"
-        book_id = gets.to_i
-        user.extend(@library.books_examples, book_id, user_id)
-        puts "Press enter to continue..."
-        gets
-      when "4" then
-        puts "Enter book id"
-        book_id = gets.to_i
-        user.return(@library.books_examples, book_id, user_id)
-        puts "Press enter to continue..."
-        gets
-      when "5" then
-        printBooks(user.books_taken.keys)
-        puts "Press enter to continue..."
-        gets
-      when "6" then
-        break
-      else
-        puts "Invalid input! Choose between 1 and 6. Press enter to continue..."
-        gets
+        when "1" then
+          print_books
+          idle
+        when "2" then
+          search_book
+        when "3" then
+          puts "Enter book id"
+          book_id = gets.to_i
+          book = Book.find_first_by_id(book_id)
+          user.extend(book)
+          idle
+        when "4" then
+          puts "Enter book id"
+          book_id = gets.to_i
+          book = Book.find_first_by_id(book_id)
+          user.return(book)
+          idle
+        when "5" then
+          print_books(user.books_taken.keys)
+          idle
+        when "6" then
+          break
+        else
+          invalid_input(6)
       end
-      print `clear`
-      puts msg
     end
   end
 
-  def start_SS(supervisor_id)
-    supervisor = @library.supervisors[supervisor_id]
-    msg = "1 - to see all books in library\n2 - to search book\n3 - to remove user\n4 - to add new user\n5 - to lend a book\n6 - to see all users\n7 - to disconnect"
+  def start_SS(supervisor)
     while true
-      print `clear`
-      puts msg
+      print_clear "1 - to see all books in library\n2 - to search book"
+      puts "3 - to remove user\n4 - to add new user\n5 - to lend a book"
+      puts "6 - to see all users\n7 - to add new book\n8 - to disconnect"
       case gets.chomp
         when "1" then
-          printBooks
-          puts "Press enter to continue..."
-          gets
+          print_books
+          idle
         when "2" then
           search_book
         when "3" then
           puts "Enter user id"
           user_id = gets.to_i
-          @library.users.delete(user_id)
-          puts "Press enter to continue..."
-          gets
+          User.delete_by_id(user_id)
+          idle
         when "4" then
           puts "Enter name"
           name = gets.chomp
@@ -156,61 +134,65 @@ class UI
           birthday = Date.parse(gets)
           puts "Enter email"
           email = gets.chomp
-          user = User.new(name, surname, birthday, email)
-          @library.add_acc(:users, user)
-          puts "Press enter to continue..."
-          gets
+          User.new(name, surname, birthday, email).add!
+          idle
         when "5" then
           puts "Enter user id"
           user_id = gets.to_i
           puts "Enter book id"
           book_id = gets.to_i
-          user = @library.users[user_id]
-          supervisor.lend(@library.books_examples, @library.users, book_id, user, user_id)
-          puts "Press enter to continue..."
-          gets
+          user = User.find_first_by_id(user_id)
+          book = Book.find_first_by_id(book_id)
+          supervisor.lend(user, book)
+          idle
         when "6" then
-          print `clear`
-          if @library.users == {}
-            puts "No records"
+          if User.all.empty?
+            print_clear "No records"
           else
-            puts "ID |   Name   |   Surname    |     Birthday    |         Email" 
-            @library.users.each do |id, user|
-              print "#{id}   "
+            print_clear "ID |   Name   |   Surname    |     Birthday    |         Email" 
+            User.all.each do |user|
+              print "#{user.id}   "
               print format(user.name, 15)
               print format(user.surname, 15)
               print user.birthday.to_s + "       "
               puts user.email
             end
           end
-          puts "Press enter to continue..."
-          gets
-        when "7" then
+          idle
+        when "7" then 
+          puts "Enter name"
+          name = gets.chomp
+          puts "Enter author"
+          author = gets.chomp
+          puts "Enter year"
+          year = gets.to_i
+          puts "Enter publisher"
+          publisher = gets.chomp
+          puts "Enter the number of copies"
+          count = gets.to_i
+          Book.new(name, author, year, publisher, count).add!
+          idle
+        when "8" then
           break
         else
-          puts "Invalid input! Choose between 1 and 7. Press enter to continue..."
-          gets
+          invalid_input(8)
       end
-      print `clear`
-      puts msg
     end
   end
 
-  def start_AS(administrator_id)
-    administrator = @library.administrators[administrator_id]
-    msg = "1 - to see all supervisors\n2 - to add new supervisor\n3 - to remove supervisor\n4 - to change supervisors salary\n5 - to disconnect"
+  def start_AS(administrator)
     while true
-      print `clear`
-      puts msg
+      print_clear "1 - to see all supervisors\n2 - to add new supervisor"
+      puts "3 - to remove supervisor\n4 - to change supervisors salary"
+      puts "5 - to save everything \n6 - to disconnect"
       case gets.chomp
         when "1" then
-          print `clear`
-          if @library.supervisors == {}
-            puts "No records"
+          if Supervisor.all.empty?
+            print_clear "No records"
           else
-            puts "ID |   Name   |   Surname    |     Birthday    |       SIN     |        Salary" 
-            @library.supervisors.each do |id, supervisor|
-              print "#{id}   "
+            print_clear "ID |   Name   |   Surname    |     Birthday    |       SIN     |        Salary" 
+            Supervisor.all.each do |supervisor|
+              print "#{supervisor.id}   "
               print format(supervisor.name, 15)
               print format(supervisor.surname, 15)
               print supervisor.birthday.to_s + "       "
@@ -218,8 +200,7 @@ class UI
               puts supervisor.salary
             end
           end
-          puts "Press enter to continue..."
-          gets
+          idle
         when "2" then
           puts "Enter name"
           name = gets.chomp
@@ -229,42 +210,40 @@ class UI
           birthday = Date.parse(gets)
           puts "Enter social insurance number"
           sin = gets.to_i
-          supervisor = Supervisor.new(name, surname, birthday, sin)
-          @library.add_acc(:supervisors, supervisor)
-          puts "Press enter to continue..."
-          gets
+          Supervisor.new(name, surname, birthday, sin).add!
+          idle
         when "3" then
           puts "Enter supervisor id"
           supervisor_id = gets.to_i
-          @libarary.supervisors.delete(supervisor_id)
-          puts "Press enter to continue..."
-          gets
+          Supervisor.delete_by_id(supervisor_id)
+          idle
         when "4" then
           puts "Enter supervisor id"
           supervisor_id = gets.to_i
-          supervisor = @library.supervisors[supervisor_id]
+          supervisor = Supervisor.find_first_by_id(supervisor_id)
           puts "Enter new salary"
-          salary = gets.to_i
-          administrator.set_salary(supervisor, supervisor_id, @library.supervisors, salary)
-          puts "Press enter to continue..."
-          gets
+          salary = gets.to_f
+          administrator.set_salary(supervisor, salary)
+          idle
         when "5" then
+          @library.save_books
+          @library.save_accounts
+          idle
+        when "6" then
           break
         else
-          puts "Invalid input! Choose between 1 and 5. Press enter to continue..."
-          gets
+          invalid_input(6)
         end
     end
   end
 
-  def printBooks(books_ids=@library.books.keys)
-    if books_ids == []  
-      puts "No records"
+  def print_books(books = Book.all)
+    if books.empty?
+      print_clear "No records"
     else
-      puts "ID |       Title       |       Author        | Year |  Publisher"
-      books_ids.each do |id|
-        book = @library.books[id]
-        print "#{id}    "  
+      print_clear "ID |       Title       |       Author        | Year |  Publisher"
+      books.each do |book|
+        print "#{book.id}    "  
         print format(book.title, 20)
         print format(book.author, 22)
         print book.year, "    "
@@ -278,40 +257,46 @@ class UI
     string + " " * (spaces - string.length)
   end
 
-  def seach_book
-    print `clear`
-    msg = "1 - to search by title\n2 - by author\n3 - by year\n4 - by publisher\n"
-    print m
+  def search_book
     while true
+      print_clear "1 - to search by title\n2 - by author\n3 - by year\n4 - by publisher\n"
       case gets.chomp
         when "1"
-          category = :title
+          print_books(Book.find_by_title(get_pattern))
           break
         when "2"
-          category = :author
+          print_books(Book.find_by_author(get_pattern))
           break
         when "3"
-          category = :year
+          print_books(Book.find_by_year(get_pattern))
           break
         when "4"
-          category = :publisher
+          print_books(Book.find_by_publisher(get_pattern))
           break
         else
-          puts "Invalid input! Choose between 1 and 3. Press enter to continue..."
-          gets
+          invalid_input(4)
       end
-      print `clear`
-      print msg
     end
+
+    idle
+  end
+  
+  def get_pattern
     puts "Enter search pattern"
-    pattern = gets.chomp    
-    books = @library.get_books(category, pattern)
-    printBooks(books)
+    gets.chomp    
+  end
+
+  def idle
     puts "Press enter to continue..."
+    gets
+  end
+
+  def invalid_input(range)
+    puts "Invalid input! Choose between 1 and #{range}. Press enter to continue..."
     gets
   end
 end
 
 
 
-UI.new
+Controller.new

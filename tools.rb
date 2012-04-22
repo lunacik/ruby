@@ -18,28 +18,17 @@ end
 
 
 module IDGenerator
-  def new_id(ids)
+  def new_id(ids = nil)
+    if ids == nil
+      ids = self.class.all.collect {|item| item.id}
+    end
+
     if ids == []
-      ids.push(0)
       0
     else
-      0.upto(ids.max + 1) do |id| 
-        if not ids.include?(id)
-          ids.push(id) 
-          return id 
-        end
-      end
+      0.upto(ids.max + 1).find {|id| not ids.include?(id)}
     end
   end
-end
-
-
-
-class Fixnum
-  def upcase
-    self
-  end
-  alias include? ==
 end
 
 

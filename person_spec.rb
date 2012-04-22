@@ -1,5 +1,6 @@
 
 require './person'
+require './spec_helper'
 
 
 describe Person do
@@ -40,5 +41,15 @@ describe Person do
     it "should return correct birthday" do
       @person.birthday.should == Date.new(1990, 4, 29)
     end
+  end
+
+  describe "#id" do
+    it "should return id(auto generated)" do
+      @person.should have_id_equal 0
+    end
+  end
+
+  it "should inherit from 'Collection'" do
+    Person.should < Collection
   end
 end
